@@ -128,3 +128,14 @@ kubectl -n istio-system get pod -l istio=pilot -o jsonpath={.items[0].metadata.n
 the pod name is istio-pilot-5fb44ddbc-2wkkx.
 ```
 
+## MISC
+### isapply
+```bash
+isapply <yaml file name>
+```
+
+equals to:
+
+```bash
+kubectl apply -f <(istioctl kube-inject -f <yaml file name>)
+```

@@ -1,7 +1,7 @@
 #!/bin/bash
 VARIABLES_FN=~/.easy_kubectl/variables.sh
 function isapply() {
-  kubectl apply -f <(istioctl kube-inject -f $1) -n $2
+  kubectl apply -f <(istioctl kube-inject -f $1)
 }
 
 function k() {
