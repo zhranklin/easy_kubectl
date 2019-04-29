@@ -14,13 +14,13 @@ function k() {
     varname='$KUBE_NS'$1
     if [[ -n $2 ]]; then
       eval "export "'KUBE_NS'"$1=$2"
-      easy_kubectl_export_variables $VARIABLES_FN
     fi
     export KUBE_NS=`eval echo $varname`
     echo namespace changed to:
     echo $1: $KUBE_NS
+    easy_kubectl_export_variables $VARIABLES_FN
   else
-    echo kubectl -n $KUBE_NS $@
+    echo kubectl -n $KUBE_NS $@ > 2
     kubectl -n $KUBE_NS $@
   fi
 }
