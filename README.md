@@ -1,5 +1,5 @@
 # easy_kubectl
-Make kubectl command as easy as possible
+Easy to switch namespace of kubectl. And avoid the trouble of typing namespace every time.
 
 ## Install
 ```bash
@@ -49,10 +49,10 @@ namespace changed to:
 then run kubectl:
 
 ```bash
-$ k get pods
+$ k get po
 
 ---
-kubectl -n istio-system get pods
+kubectl -n istio-system get po
 NAME                                      READY     STATUS      RESTARTS   AGE
 consul-debug-b94cd9d6c-hwbnv              1/1       Running     0          4d
 consul-yx-798948c488-kkl7c                1/1       Running     0          5d
