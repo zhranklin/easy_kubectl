@@ -6,6 +6,14 @@ Easy to switch namespace of kubectl. And avoid the trouble of typing namespace e
 source <(curl -fsSL https://raw.githubusercontent.com/zhranklin/easy_kubectl/master/install.sh)
 ```
 
+To enable the [kubectl auto-completion(official)](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete), you may install bash-completion, such like:
+
+```bash
+yum install -y bash-completion
+```
+
+Installation of bash-completion needs relogin.
+
 ## Usage
 ### Run kubectl command
 ```bash
@@ -126,6 +134,29 @@ $ echo the pod name is $(k get pod -l istio=pilot -o jsonpath='{.items[0].metada
 ---
 kubectl -n istio-system get pod -l istio=pilot -o jsonpath={.items[0].metadata.name}
 the pod name is istio-pilot-5fb44ddbc-2wkkx.
+```
+
+### Auto Completion
+Auto completion is automatically enabled by `kubectl completion`, and the namespace will be set correctly.
+
+```bash
+$ k 1
+---
+namespace is now set to:
+1: istio-system
+
+$ k get po ist<TAB>
+$ k get po istio-<TAB><TAB>
+---
+istio-citadel-7ff754d967-rx8f8           istio-ingressgateway-854bbb5c6c-jk7b5    istio-sidecar-injector-599cb6d6d4-86b6r
+istio-egressgateway-847c9bd958-nxzqv     istio-pilot-6f94656b46-9bf9g             istio-telemetry-5c4867756d-2v4gf
+istio-galley-6569cdd499-hdwp5            istio-policy-5cb5c594b6-92z5v            istio-tracing-f7cd46785-k8z6d
+
+$ k get rs istio-<TAB><TAB>
+---
+istio-ingressgateway-854bbb5c6c    istio-policy-5cb5c594b6      istio-citadel-7ff754d967           
+istio-sidecar-injector-599cb6d6d4  istio-tracing-f7cd46785      istio-egressgateway-847c9bd958
+istio-pilot-6f94656b46             istio-galley-6569cdd499      istio-telemetry-5c4867756d
 ```
 
 ## MISC
