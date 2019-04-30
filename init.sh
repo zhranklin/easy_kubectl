@@ -35,5 +35,5 @@ function easy_kubectl_export_variables() {
 }
 source $VARIABLES_FN
 
-COMPLETE_FN=$BASE_PATH/load_completion.sh
+COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
 source $COMPLETE_FN

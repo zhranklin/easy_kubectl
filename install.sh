@@ -10,7 +10,7 @@ function easy_kube_install_main() {
   mkdir -p .easy_kubectl
   cd $HOME/.easy_kubectl
   curl -fsSL https://raw.githubusercontent.com/zhranklin/easy_kubectl/master/init.sh > init.sh
-  curl -fsSL https://raw.githubusercontent.com/zhranklin/easy_kubectl/master/load_completion.sh > load_completion.sh
+  curl -fsSL https://raw.githubusercontent.com/zhranklin/easy_kubectl/master/load_kube_complete.sh > load_kube_complete.sh
 }
 (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
 k 0 default
