@@ -1,5 +1,6 @@
 #!/bin/bash
-VARIABLES_FN=~/.easy_kubectl/variables.sh
+BASE_PATH=~/.easy_kubectl
+VARIABLES_FN=$BASE_PATH/variables.sh
 function isapply() {
   kubectl apply -f <(istioctl kube-inject -f $1)
 }
@@ -33,3 +34,6 @@ function easy_kubectl_export_variables() {
   done  
 }
 source $VARIABLES_FN
+
+COMPLETE_FN=$BASE_PATH/load_completion.sh
+source $COMPLETE_FN
