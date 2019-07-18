@@ -1,3 +1,4 @@
+[中文README](./README_ZH.md)
 # easy_kubectl
 Easy to switch namespace of kubectl. And avoid the trouble of typing namespace every time.
 
