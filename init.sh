@@ -7,10 +7,10 @@ function isapply() {
 
 function k() {
   if [ $# -eq 0 ]; then
-    echo current: $KUBE_NS
     for i in `seq 0 9`; do
       echo $i: `eval echo '$KUBE_NS'$i`
-    done  
+    done
+    echo current: $KUBE_NS
   elif [[ $1 =~ [0-9] ]]; then
     varname='$KUBE_NS'$1
     if [[ -n $2 ]]; then
