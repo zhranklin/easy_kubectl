@@ -1,5 +1,5 @@
 #!/bin/bash
-FILE=compl
+FILE=~/.easy_kubectl/compl
 kubectl completion bash > $FILE
 
 LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
