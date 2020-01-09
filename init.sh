@@ -7,11 +7,14 @@ function isapply() {
 
 function k() {
   if [ $# -eq 0 ]; then
-    for i in `seq 0 9`; do
-      echo $i: `eval echo '$KUBE_NS'$i`
+    for i in `seq 0 100`; do
+      ns=$(eval echo '$KUBE_NS'$i)
+      if [[ $ns != "" ]]; then
+        echo $i: $ns
+      fi
     done
     echo current: $KUBE_NS
-  elif [[ $1 =~ [0-9] ]]; then
+  elif [[ $1 =~ [0-9]+ ]]; then
     varname='$KUBE_NS'$1
     if [[ -n $2 ]]; then
       eval "export "'KUBE_NS'"$1=$2"
@@ -29,7 +32,7 @@ function k() {
 function easy_kubectl_export_variables() {
   fn=$1
   echo export KUBE_NS=$KUBE_NS > $fn
-  for i in `seq 0 9`; do
+  for i in `seq 0 100`; do
     echo export KUBE_NS$i=`eval echo '$KUBE_NS'$i` >> $fn
   done  
 }
