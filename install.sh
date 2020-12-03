@@ -149,6 +149,5 @@ if [ ! -f $HOME/.easy_kubectl/fzf ];then
   chmod +x $HOME/.easy_kubectl/fzf
 fi
 (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
-k 0 default
 echo successfully installed easy_kubectl!
 
