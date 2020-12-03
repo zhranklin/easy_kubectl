@@ -103,7 +103,7 @@ function p() {
 }
 
 function update_k() {
-  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/releases/latest/download/install.sh)
+  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/master.zip | tar xzO easy_kubectl-master/install.sh)
 }
 
 function easy_kubectl_export_variables() {
