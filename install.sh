@@ -145,9 +145,8 @@ EOF
 }
 touch $HOME/.easy_kubectl/.history
 if [ ! -f $HOME/.easy_kubectl/fzf ];then
-  wget https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-linux_amd64.tar.gz -O fzf.tar.gz
-  tar xzf fzf.tar.gz
-  mv fzf $HOME/.easy_kubectl/fzf
+  curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-linux_amd64.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf
+  chmod +x $HOME/.easy_kubectl/fzf
 fi
 (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
 k 0 default
