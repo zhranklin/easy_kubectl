@@ -24,7 +24,7 @@ function __k_add_history() {
 }
 
 function k() {
-  if [[ $1 = l ]]; then
+  if [[ $1 = l && $EASY_KUBECTL_LEGACY = "1" ]]; then
     for i in `seq 0 100`; do
       ns=$(eval echo '$KUBE_NS'$i)
       if [[ $ns != "" ]]; then
@@ -36,7 +36,7 @@ function k() {
     else
       echo current: $KUBE_CONTEXT/$KUBE_NS
     fi
-  elif [[ $1 =~ ^[0-9]+$ ]]; then
+  elif [[ $1 =~ ^[0-9]+$ && $EASY_KUBECTL_LEGACY = "1" ]]; then
     varname='$KUBE_NS'$1
     if [[ -n $2 ]]; then
       eval "export "'KUBE_NS'"$1=$2"
