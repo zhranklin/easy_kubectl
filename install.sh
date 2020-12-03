@@ -60,7 +60,7 @@ function k() {
     if [[ -n $1 ]]; then
       QUERY="--query=$1 -1 -0"
     fi
-    NEW_NS=$(echo "$NS_RESULT"|tr ' ' '\n'|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=begin,end,index $QUERY)
+    NEW_NS=$(echo "$NS_RESULT"|tr ' ' '\n'|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index $QUERY)
     UNCHANGED="(unchanged)"
     if [[ $NEW_NS != "" ]]; then
       export KUBE_NS=$NEW_NS
@@ -103,7 +103,7 @@ function p() {
 }
 
 function update_k() {
-  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/releases/download/v1.0.0/install.sh)
+  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/releases/latest/download/install.sh)
 }
 
 function easy_kubectl_export_variables() {
