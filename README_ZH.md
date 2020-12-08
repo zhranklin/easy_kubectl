@@ -14,6 +14,9 @@ yum install -y bash-completion
 
 bash-completion的安装需要重新登录才能生效。
 
+## 更新
+安装完easy_kubectl后, 命令行执行update_k即可更新easy_kubectl
+
 ## 使用方法
 ### 选择namespace
 ![](https://github.com/zhranklin/easy_kubectl/blob/media/media/ek1.gif)
