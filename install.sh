@@ -67,8 +67,12 @@ function k() {
       __k_add_history $NEW_NS
       UNCHANGED=""
     fi
+    CONTEXT_STR=""
+    if [[ $KUBE_CONTEXT != "" ]]; then
+      CONTEXT_STR=$KUBE_CONTEXT/
+    fi
     echo "Current Namespace$UNCHANGED:"
-    echo $KUBE_NS
+    echo $CONTEXT_STR$KUBE_NS
   else
     if [[ $KUBE_CONTEXT = "" ]]; then
       echo kubectl -n $KUBE_NS $@ >&2
