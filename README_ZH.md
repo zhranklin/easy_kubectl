@@ -24,7 +24,7 @@ bash-completion的安装需要重新登录才能生效。
 
 有两种选择方法:
 
-1. `k+回车`, 然后搜索namespace, 支持fuzzy search
+1. `k+回车`, 然后搜索namespace, 支持fuzzy search(基于[fzf](https://github.com/junegunn/fzf))
 2. `k <关键字>`, 如果匹配到唯一结果, 则会直接选中
 
 ### 执行命令
