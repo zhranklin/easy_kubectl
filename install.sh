@@ -164,8 +164,9 @@ if [ ! -f $HOME/.easy_kubectl/fzf ];then
     FreeBSD\ *64)    postfix=freebsd_amd64 ;;
     OpenBSD\ *64)    postfix=openbsd_amd64 ;;
   esac
-  curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-$postfix.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf
-  chmod +x $HOME/.easy_kubectl/fzf
+  curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-$postfix.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf.1
+  chmod +x $HOME/.easy_kubectl/fzf.1
+  mv $HOME/.easy_kubectl/fzf.1 $HOME/.easy_kubectl/fzf
 fi
 (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
 k 0 default
