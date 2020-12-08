@@ -150,7 +150,21 @@ EOF
 }
 touch $HOME/.easy_kubectl/.history
 if [ ! -f $HOME/.easy_kubectl/fzf ];then
-  curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-linux_amd64.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf
+  archi=$(uname -sm)
+  postfix=
+  binary_error=""
+  case "$archi" in
+    Darwin\ *64)     postfix=darwin_amd64  ;;
+    Linux\ armv5*)   postfix=linux_armv5   ;;
+    Linux\ armv6*)   postfix=linux_armv6   ;;
+    Linux\ armv7*)   postfix=linux_armv7   ;;
+    Linux\ armv8*)   postfix=linux_arm64   ;;
+    Linux\ aarch64*) postfix=linux_arm64   ;;
+    Linux\ *64)      postfix=linux_amd64   ;;
+    FreeBSD\ *64)    postfix=freebsd_amd64 ;;
+    OpenBSD\ *64)    postfix=openbsd_amd64 ;;
+  esac
+  curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-$postfix.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf
   chmod +x $HOME/.easy_kubectl/fzf
 fi
 (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
