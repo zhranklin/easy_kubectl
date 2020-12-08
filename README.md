@@ -5,7 +5,7 @@ Easy to switch namespace of kubectl. And avoid the trouble of typing namespace e
 
 ## Install
 ```bash
-source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/master.tar.gz | tar xzO easy_kubectl-master/install.sh)
+source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/latest.tar.gz | tar xzO easy_kubectl-latest/install.sh)
 ```
 
 To enable the [kubectl auto-completion(official)](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete), you may install bash-completion, such like:

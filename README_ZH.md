@@ -3,7 +3,7 @@ easy_kubectl旨在执行kubectl命令的时候解放我们的双手, 避免每�
 
 ## 安装
 ```bash
-source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/master.tar.gz | tar xzO easy_kubectl-master/install.sh)
+source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/latest.tar.gz | tar xzO easy_kubectl-latest/install.sh)
 ```
 
 如果要开启[补全(来自官方)](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete), 需要执行类似下面的命令来安装bash-completion:
