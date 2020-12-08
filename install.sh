@@ -107,7 +107,8 @@ function p() {
 }
 
 function update_k() {
-  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/latest.tar.gz | tar xzO easy_kubectl-latest/install.sh)
+  tag=$(curl https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest -s|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+  source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 }
 
 function easy_kubectl_export_variables() {
