@@ -51,7 +51,7 @@ function k() {
   elif [[ $# -lt 2 ]]; then
     NS_LIST="$(cat $HOME/.easy_kubectl/.history|tac)"
     NS_RESULT="$(echo $NS_LIST|xargs echo)"
-    for kns in $(kubectl get ns -ojsonpath='{.items[*].metadata.name}'); do
+    for kns in $(kubectl get ns --context=$KUBE_CONTEXT -ojsonpath='{.items[*].metadata.name}'); do
       if [[ $(echo "$NS_LIST"|sed -n '/^'$kns'$/p') = "" ]]; then
         NS_RESULT="$NS_RESULT $kns" 
       fi
@@ -109,6 +109,7 @@ function update_k() {
 function easy_kubectl_export_variables() {
   fn=$1
   echo export KUBE_NS=$KUBE_NS > $fn
+  echo export KUBE_CONTEXT=$KUBE_CONTEXT >> $fn
   for i in `seq 0 100`; do
     echo export KUBE_NS$i=`eval echo '$KUBE_NS'$i` >> $fn
   done  
