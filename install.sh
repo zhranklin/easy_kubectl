@@ -44,10 +44,11 @@ function k() {
     export KUBE_NS=`eval echo $varname`
     echo namespace is now set to:
     echo $1: $KUBE_NS
-    easy_kubectl_export_variables $VARIABLES_FN
+    __easy_kubectl_export_variables $VARIABLES_FN
   elif [[ $1 = c ]]; then
     export KUBE_CONTEXT=$2
     echo context is now set to \'$KUBE_CONTEXT\'
+    __easy_kubectl_export_variables $VARIABLES_FN
   elif [[ $# -lt 2 ]]; then
     NS_LIST="$(cat $HOME/.easy_kubectl/.history|tac)"
     NS_RESULT="$(echo $NS_LIST|xargs echo)"
@@ -66,6 +67,7 @@ function k() {
       export KUBE_NS=$NEW_NS
       __k_add_history $NEW_NS
       UNCHANGED=""
+      __easy_kubectl_export_variables $VARIABLES_FN
     fi
     CONTEXT_STR=""
     if [[ $KUBE_CONTEXT != "" ]]; then
@@ -111,7 +113,7 @@ function update_k() {
   source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 }
 
-function easy_kubectl_export_variables() {
+function __easy_kubectl_export_variables() {
   fn=$1
   echo export KUBE_NS=$KUBE_NS > $fn
   echo export KUBE_CONTEXT=$KUBE_CONTEXT >> $fn
