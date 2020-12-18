@@ -147,6 +147,8 @@ LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
 sed -i $LINE'iecho "-n=$KUBE_NS"' $FILE
 sed -i $LINE'iecho "--context=$KUBE_CONTEXT"' $FILE
 
+sed -i 's/__custom_func/__k_custom_func/g' $FILE
+sed -i 's/_kubectl/_k_kubectl/g' $FILE
 source $FILE
 
 EOF
