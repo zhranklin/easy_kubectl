@@ -3,7 +3,7 @@ easy_kubectl旨在执行kubectl命令的时候解放我们的双手, 避免每�
 
 ## 安装
 ```bash
-tag=1.0.8
+tag=1.0.10
 source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 ```
 

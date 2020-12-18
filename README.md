@@ -5,7 +5,7 @@ Easy to switch namespace of kubectl. And avoid the trouble of typing namespace e
 
 ## Install
 ```bash
-tag=1.0.8
+tag=1.0.10
 source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 ```
 
