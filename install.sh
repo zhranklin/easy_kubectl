@@ -110,6 +110,7 @@ function p() {
 
 function update_k() {
   tag=$(curl https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest -s|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+  echo updating to version: v$tag
   source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 }
 
