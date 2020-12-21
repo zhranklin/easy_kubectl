@@ -126,6 +126,7 @@ source $VARIABLES_FN
 
 COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
 source $COMPLETE_FN
+source <(kubectl completion bash)
 
 EOF
 cat <<\EOF > load_kube_complete.sh
