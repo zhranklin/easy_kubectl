@@ -60,8 +60,8 @@ function k() {
     QUERY=""
     if [[ -n $1 ]]; then
       word=$(echo $1|sed -r 's/([A-Z])$/\l\1./g; s/^([A-Z])/.\l\1/g; s/([a-zA-Z])[\[\.:,]$/\l\1./g; s/^[\[\.:,]([a-zA-Z])/.\l\1/g;')
-      GREP_PREFIX="grep -iE ^$(echo $word|sed -nr 's/^\.([a-zA-Z])/\l\1/p')"
-      GREP_POSTFIX="grep -iE $(echo $word|sed -nr 's/([a-zA-Z])\.$/\l\1/p')\$"
+      GREP_PREFIX="grep -iE ^$(echo $word|sed -nr 's/^\.([a-zA-Z]).*/\l\1/p')"
+      GREP_POSTFIX="grep -iE $(echo $word|sed -nr 's/.*([a-zA-Z])\.$/\l\1/p')\$"
       word=$(echo $word|sed 's/\.$//g; s/^\.//g')
       QUERY="--query=$word -1 -0"
     fi
