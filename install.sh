@@ -65,7 +65,7 @@ function k() {
       word=$(echo $word|sed 's/\.$//g; s/^\.//g')
       QUERY="--query=$word -1 -0"
     fi
-    NEW_NS=$(echo "$NS_RESULT"|tr ' ' '\n'|$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index $QUERY)
+    NEW_NS=$(echo "$NS_RESULT"|tr ' ' '\n'|$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index -i $QUERY)
     UNCHANGED="(unchanged)"
     if [[ $NEW_NS != "" ]]; then
       export KUBE_NS=$NEW_NS
