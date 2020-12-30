@@ -50,11 +50,11 @@ function k() {
     echo context is now set to \'$KUBE_CONTEXT\'
     __easy_kubectl_export_variables $VARIABLES_FN
   elif [[ $# -lt 2 ]]; then
-    NS_LIST="$(cat $HOME/.easy_kubectl/.history|tac)"
-    NS_RESULT="$(echo $NS_LIST|xargs echo)"
-    for kns in $(kubectl get ns --context=$KUBE_CONTEXT -ojsonpath='{.items[*].metadata.name}'); do
-      if [[ $(echo "$NS_LIST"|sed -n '/^'$kns'$/p') = "" ]]; then
-        NS_RESULT="$NS_RESULT $kns" 
+    NSS="$(kubectl get ns --context=$KUBE_CONTEXT -ojsonpath='{.items[*].metadata.name}'|tr ' ' '\n')"
+    for ns in $(cat $HOME/.easy_kubectl/.history); do
+      if echo "$NSS"|grep -qE "^$ns\$"; then
+        NSS="$ns
+$(echo "$NSS"|sed '/^'$ns'$/d' )" 
       fi
     done
     QUERY=""
@@ -65,7 +65,7 @@ function k() {
     if [[ -n $1 ]]; then
       QUERY="--query=$word -1 -0"
     fi
-    NEW_NS=$(echo "$NS_RESULT"|tr ' ' '\n'|$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index -i $QUERY)
+    NEW_NS=$(echo "$NSS"|$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index -i $QUERY)
     UNCHANGED="(unchanged)"
     if [[ $NEW_NS != "" ]]; then
       export KUBE_NS=$NEW_NS
