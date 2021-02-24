@@ -1,7 +1,7 @@
 function easy_kube_install_main() {
   cd $HOME
-  for fn in .zshrc .bashrc; do
-    if [ -f $fn ];then
+  for fn in .bashrc; do  # add .zshrc after resolving all relevant issues
+    if [ -f $fn ]; then
       if [ $(grep -c "easy_kubectl" $fn) -eq '0' ]; then
         echo 'source $HOME/.easy_kubectl/init.sh' >> $fn
       fi
