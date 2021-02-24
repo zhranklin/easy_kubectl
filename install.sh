@@ -23,6 +23,15 @@ function __k_add_history() {
   echo $1 >> $HISTORY
 }
 
+function __easy_kubectl_export_variables() {
+  fn=$1
+  echo export KUBE_NS=$KUBE_NS > $fn
+  echo export KUBE_CONTEXT=$KUBE_CONTEXT >> $fn
+  for i in `seq 0 100`; do
+    echo export KUBE_NS$i=`eval echo '$KUBE_NS'$i` >> $fn
+  done
+}
+
 function k() {
   if [[ $1 = l && $EASY_KUBECTL_LEGACY = "1" ]]; then
     for i in `seq 0 100`; do
@@ -65,7 +74,7 @@ $(echo "$NSS"|sed '/^'$ns'$/d' )"
     if [[ -n $1 ]]; then
       QUERY="--query=$word -1 -0"
     fi
-    NEW_NS=$(echo "$NSS"|$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt="search for namespace: " --tiebreak=end,index -i $QUERY)
+    NEW_NS=$(echo "$NSS"|bash -c "$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt=\"search for namespace: \" --tiebreak=end,index -i $QUERY")
     UNCHANGED="(unchanged)"
     if [[ $NEW_NS != "" ]]; then
       export KUBE_NS=$NEW_NS
@@ -118,14 +127,6 @@ function update_k() {
   source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 }
 
-function __easy_kubectl_export_variables() {
-  fn=$1
-  echo export KUBE_NS=$KUBE_NS > $fn
-  echo export KUBE_CONTEXT=$KUBE_CONTEXT >> $fn
-  for i in `seq 0 100`; do
-    echo export KUBE_NS$i=`eval echo '$KUBE_NS'$i` >> $fn
-  done  
-}
 source $VARIABLES_FN
 
 COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
