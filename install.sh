@@ -128,7 +128,7 @@ function update_k() {
   source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 }
 
-source $VARIABLES_FN
+test -f "VARIABLES_FN" && source $VARIABLES_FN
 
 COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
 source $COMPLETE_FN
