@@ -11,6 +11,7 @@ function easy_kube_install_main() {
   cd $HOME/.easy_kubectl
 cat <<\EOF > init.sh
 #!/bin/bash
+sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
 BASE_PATH=~/.easy_kubectl
 VARIABLES_FN=$BASE_PATH/variables.sh
 function isapply() {
@@ -103,7 +104,7 @@ function p() {
     shift 1
 
     array=()
-    for((i=1;i<=$#;i++)); do
+    for ((i=1;i<=$#;i++)); do
       array[${i}]="${!i}"
     done
     curl $ip$path "${array[@]}"
@@ -130,13 +131,14 @@ source $VARIABLES_FN
 
 COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
 source $COMPLETE_FN
-source <(kubectl completion bash)
+source <(kubectl completion ${sh_name:-bash})
 
 EOF
 cat <<\EOF > load_kube_complete.sh
 #!/bin/bash
+sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
 FILE=~/.easy_kubectl/compl
-kubectl completion bash > $FILE
+kubectl completion ${sh_name:-bash} > $FILE
 
 LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
 sed -i ${LINE}'s/ \(--namespace\|-n\)//g' $FILE
