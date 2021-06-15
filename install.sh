@@ -14,6 +14,7 @@ cat <<\EOF > init.sh
 sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
 BASE_PATH=~/.easy_kubectl
 VARIABLES_FN=$BASE_PATH/variables.sh
+touch $VARIABLES_FN
 function isapply() {
   kubectl apply -f <(istioctl kube-inject -f $1)
 }
@@ -178,6 +179,7 @@ if [ ! -f $HOME/.easy_kubectl/fzf ];then
     FreeBSD\ *64)    postfix=freebsd_amd64 ;;
     OpenBSD\ *64)    postfix=openbsd_amd64 ;;
   esac
+  touch $HOME/.easy_kubectl/fzf.1
   curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-$postfix.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf.1
   chmod +x $HOME/.easy_kubectl/fzf.1
   mv $HOME/.easy_kubectl/fzf.1 $HOME/.easy_kubectl/fzf
