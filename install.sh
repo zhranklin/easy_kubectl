@@ -33,7 +33,16 @@ function easy_kube_install_main() {
   fi
   cat <<\EOF > init.sh
 #!/bin/bash
-sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
+sh_name=
+if [[ -n "${BASH_VERSION}" ]]; then
+  sh_name="bash"
+elif [[ -n "${ZSH_VERSION}" ]]; then
+  sh_name="zsh"
+else
+  # SHELL is only set by login, so when we switch from bash to zsh
+  # we still get the "bash" value of this var
+  sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
+fi
 BASE_PATH=~/.easy_kubectl
 VARIABLES_FN=$BASE_PATH/variables.sh
 function isapply() {
@@ -159,8 +168,8 @@ source <(kubectl completion ${sh_name:-bash})
 EOF
 cat <<\EOF > load_kube_complete.sh
 #!/bin/bash
-sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')
-FILE=~/.easy_kubectl/compl
+# sh_name=$(echo "$SHELL" | awk -F/ '{print $NF}')  # set by caller
+FILE=~/.easy_kubectl/compl_${sh_name}
 kubectl completion ${sh_name:-bash} > $FILE
 
 LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
