@@ -17,6 +17,20 @@ yum install -y bash-completion
 
 Installation of bash-completion needs relogin.
 
+## Generate offline installer
+```bash
+export FZF_TARGET=<target platform> # e.g. linux_amd64
+tag=$(wget -qO - https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+wget -qO - https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh > install.sh
+GEN_OFFLINE=1 source install.sh > install-offline.sh
+```
+
+You will get file `install-offline.sh`, execute at target environment:
+
+```bash
+source install-offline.sh
+```
+
 ## Update
 Just run `update_k`
 
