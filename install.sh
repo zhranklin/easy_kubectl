@@ -106,7 +106,7 @@ $(echo "$NSS"|sed '/^'$ns'$/d' )"
     if [[ -n $1 ]]; then
       QUERY="--query=$word -1 -0"
     fi
-    NEW_NS=$(echo "$NSS"|bash -c "$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --prompt=\"search for namespace: \" --tiebreak=end,index -i $QUERY")
+    NEW_NS=$(echo "$NSS"|bash -c "$GREP_PREFIX|$GREP_POSTFIX|$HOME/.easy_kubectl/fzf --no-mouse --prompt=\"search for namespace: \" --tiebreak=end,index -i $QUERY")
     UNCHANGED="(unchanged)"
     if [[ $NEW_NS != "" ]]; then
       export KUBE_NS=$NEW_NS
