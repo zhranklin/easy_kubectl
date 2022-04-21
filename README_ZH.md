@@ -3,7 +3,7 @@ easy_kubectl旨在执行kubectl命令的时候解放我们的双手, 避免每�
 
 ## 安装
 ```bash
-tag=$(curl https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest -s|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+tag=$(wget -qO - https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest -s|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
 source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 ```
 
@@ -14,6 +14,19 @@ yum install -y bash-completion
 ```
 
 bash-completion的安装需要重新登录才能生效。
+
+## 生成离线安装脚本
+```bash
+export FZF_TARGET=<target platform> # 目标平台, linux_amd64
+tag=$(wget -qO - https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+GEN_OFFLINE=1 source <(wget -qO - https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh) > install-offline.sh
+```
+
+会得到`install-offline.sh`文件, 拷贝到目标环境后, 执行:
+
+```bash
+source install-offline.sh
+```
 
 ## 更新
 安装完easy_kubectl后, 命令行执行update_k即可更新easy_kubectl

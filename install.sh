@@ -1,3 +1,44 @@
+SCRIPT=$0
+function get_fzf_url() {
+  archi=$(uname -sm)
+  target=$FZF_TARGET
+  ext=
+  binary_error=""
+  if [[ $target == "" ]]; then
+    case "$archi" in
+      Darwin\ arm64)   target=darwin_arm64     ;;
+      Darwin\ x86_64)  target=darwin_amd64     ;;
+      Linux\ armv5*)   target=linux_armv5      ;;
+      Linux\ armv6*)   target=linux_armv6      ;;
+      Linux\ armv7*)   target=linux_armv7      ;;
+      Linux\ armv8*)   target=linux_arm64      ;;
+      Linux\ aarch64*) target=linux_arm64      ;;
+      Linux\ *64)      target=linux_amd64      ;;
+      FreeBSD\ *64)    target=freebsd_amd64    ;;
+      OpenBSD\ *64)    target=openbsd_amd64    ;;
+      CYGWIN*\ *64)    target=windows_amd64    ;;
+      MINGW*\ *64)     target=windows_amd64    ;;
+      MSYS*\ *64)      target=windows_amd64    ;;
+      Windows*\ *64)   target=windows_amd64    ;;
+    esac
+  fi
+  case "$target" in
+    darwin_*)  ext=zip    ;;
+    windows_*) ext=zip    ;;
+    *)         ext=tar.gz ;;
+  esac
+  echo https://github.com/junegunn/fzf/releases/download/0.30.0/fzf-0.30.0-$target.$ext
+}
+
+function gen_offline_script() {
+  echo "test -d ~/.easy_kubectl || mkdir ~/.easy_kubectl"
+  echo "base64 -d <<\EEOOFF | gunzip > ~/.easy_kubectl/fzf"
+  wget -qO - $(get_fzf_url) | tar xzO | gzip | base64 -w 128
+  echo EEOOFF
+  echo "chmod +x ~/.easy_kubectl/fzf"
+  cat "$SCRIPT"
+}
+
 function easy_kube_install_main() {
   cd $HOME
   for fn in .bashrc; do  # add .zshrc after resolving all relevant issues
@@ -13,21 +54,7 @@ function easy_kube_install_main() {
   touch $HOME/.easy_kubectl/fzf.1
   touch $HOME/.easy_kubectl/variables.sh
   if [ ! -f $HOME/.easy_kubectl/fzf ];then
-    archi=$(uname -sm)
-    postfix=
-    binary_error=""
-    case "$archi" in
-      Darwin\ *64)     postfix=darwin_amd64  ;;
-      Linux\ armv5*)   postfix=linux_armv5   ;;
-      Linux\ armv6*)   postfix=linux_armv6   ;;
-      Linux\ armv7*)   postfix=linux_armv7   ;;
-      Linux\ armv8*)   postfix=linux_arm64   ;;
-      Linux\ aarch64*) postfix=linux_arm64   ;;
-      Linux\ *64)      postfix=linux_amd64   ;;
-      FreeBSD\ *64)    postfix=freebsd_amd64 ;;
-      OpenBSD\ *64)    postfix=openbsd_amd64 ;;
-    esac
-    curl -fSL https://github.com/junegunn/fzf/releases/download/0.24.3/fzf-0.24.3-$postfix.tar.gz | tar xzO > $HOME/.easy_kubectl/fzf.1
+    wget -qO - $(get_fzf_url) | tar xzO > $HOME/.easy_kubectl/fzf.1
     chmod +x $HOME/.easy_kubectl/fzf.1
     mv $HOME/.easy_kubectl/fzf.1 $HOME/.easy_kubectl/fzf
   fi
@@ -193,7 +220,11 @@ source $FILE
 
 EOF
 }
-(easy_kube_install_main) && source ~/.easy_kubectl/init.sh
-k '^default$'
-echo successfully installed easy_kubectl!
+if [[ $GEN_OFFLINE == "1" ]]; then
+  gen_offline_script
+else
+  (easy_kube_install_main) && source ~/.easy_kubectl/init.sh
+  k '^default$'
+  echo successfully installed easy_kubectl!
+fi
 
