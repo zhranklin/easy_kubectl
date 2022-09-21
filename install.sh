@@ -94,19 +94,23 @@ function __easy_kubectl_export_variables() {
 function k() {
   if [[ $1 = c ]]; then
     C_QUERY=""
-    CXTS="$(kubectl config view -o jsonpath='{.contexts[*].name}'|tr ' ' '\n')"
-    if [[ -n $2 ]]; then
+    CXTS="<NONE> $(kubectl config view -o jsonpath='{.contexts[*].name}')"
+    if [[ -n "$2" ]]; then
       C_QUERY="--query=$2 -1 -0"
     fi
-    NEW_CXT=$(echo "$CXTS"|bash -c "$HOME/.easy_kubectl/fzf --no-mouse --prompt=\"search for context: \" --tiebreak=end,index -i $C_QUERY")
+    NEW_CXT=$(echo "$CXTS" | sed "s/ /\n/g; s/<NONE>/ /g" |bash -c "$HOME/.easy_kubectl/fzf --no-mouse --prompt=\"search for context: \" --tiebreak=end,index -i $C_QUERY")
     UNCHANGED="(unchanged)"
     if [[ $NEW_CXT != "" ]]; then
       export KUBE_CONTEXT=$NEW_CXT
       UNCHANGED=""
       __easy_kubectl_export_variables $VARIABLES_FN
     fi
-    echo "Current Context$UNCHANGED:"
-    echo $KUBE_CONTEXT
+    if [[ $KUBE_CONTEXT = " " ]]; then
+      export KUBE_CONTEXT=
+      echo -e "Current Context$UNCHANGED:\n''"
+    else
+      echo -e "Current Context$UNCHANGED:\n$KUBE_CONTEXT"
+    fi
     __easy_kubectl_export_variables $VARIABLES_FN
   elif [[ $# -lt 2 ]]; then
     NSS="$(kubectl get ns --context=$KUBE_CONTEXT -ojsonpath='{.items[*].metadata.name}'|tr ' ' '\n')"
@@ -136,8 +140,7 @@ $(echo "$NSS"|sed '/^'$ns'$/d' )"
     if [[ $KUBE_CONTEXT != "" ]]; then
       CONTEXT_STR=$KUBE_CONTEXT/
     fi
-    echo "Current Namespace$UNCHANGED:"
-    echo $CONTEXT_STR$KUBE_NS
+    echo -e "Current Namespace$UNCHANGED:\n$CONTEXT_STR$KUBE_NS"
   else
     if [[ $KUBE_CONTEXT = "" ]]; then
       echo kubectl -n $KUBE_NS $@ >&2
