@@ -92,30 +92,21 @@ function __easy_kubectl_export_variables() {
 }
 
 function k() {
-  if [[ $1 = l && $EASY_KUBECTL_LEGACY = "1" ]]; then
-    for i in `seq 0 100`; do
-      ns=$(eval echo '$KUBE_NS'$i)
-      if [[ $ns != "" ]]; then
-        echo $i: $ns
-      fi
-    done
-    if [[ $KUBE_CONTEXT = "" ]]; then
-      echo current: $KUBE_NS
-    else
-      echo current: $KUBE_CONTEXT/$KUBE_NS
-    fi
-  elif [[ $1 =~ ^[0-9]+$ && $EASY_KUBECTL_LEGACY = "1" ]]; then
-    varname='$KUBE_NS'$1
+  if [[ $1 = c ]]; then
+    C_QUERY=""
+    CXTS="$(kubectl config view -o jsonpath='{.contexts[*].name}'|tr ' ' '\n')"
     if [[ -n $2 ]]; then
-      eval "export "'KUBE_NS'"$1=$2"
+      C_QUERY="--query=$2 -1 -0"
     fi
-    export KUBE_NS=`eval echo $varname`
-    echo namespace is now set to:
-    echo $1: $KUBE_NS
-    __easy_kubectl_export_variables $VARIABLES_FN
-  elif [[ $1 = c ]]; then
-    export KUBE_CONTEXT=$2
-    echo context is now set to \'$KUBE_CONTEXT\'
+    NEW_CXT=$(echo "$CXTS"|bash -c "$HOME/.easy_kubectl/fzf --no-mouse --prompt=\"search for context: \" --tiebreak=end,index -i $C_QUERY")
+    UNCHANGED="(unchanged)"
+    if [[ $NEW_CXT != "" ]]; then
+      export KUBE_CONTEXT=$NEW_CXT
+      UNCHANGED=""
+      __easy_kubectl_export_variables $VARIABLES_FN
+    fi
+    echo "Current Context$UNCHANGED:"
+    echo $KUBE_CONTEXT
     __easy_kubectl_export_variables $VARIABLES_FN
   elif [[ $# -lt 2 ]]; then
     NSS="$(kubectl get ns --context=$KUBE_CONTEXT -ojsonpath='{.items[*].metadata.name}'|tr ' ' '\n')"
