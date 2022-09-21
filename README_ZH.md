@@ -50,9 +50,8 @@ source install-offline.sh
 ![](https://github.com/zhranklin/easy_kubectl/blob/media/media/ek4.gif)
 
 ### 设置context
-如需设置kubectl命令的`--context`, 则执行`k c <context>`
-
-![](https://github.com/zhranklin/easy_kubectl/blob/media/media/ek3.gif)
+如需设置kubectl命令的`--context`参数, 则执行`k c`或`k c <关键字>`
+![](https://github.com/zhranklin/easy_kubectl/blob/media/media/ek5.gif)
 
 ### 命令提示
 
