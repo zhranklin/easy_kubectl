@@ -205,8 +205,8 @@ LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)
 #查找__kubectl_override_flags()函数结尾
 LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
 #加入代码
-sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo "-n=$KUBE_NS"; fi' $FILE
-sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo "--context=$KUBE_CONTEXT"; fi' $FILE
+sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo -n "-n=$KUBE_NS "; fi' $FILE
+sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo -n "--context=$KUBE_CONTEXT "; fi' $FILE
 
 sed -i 's/__custom_func/__k_custom_func/g' $FILE
 sed -i 's/_kubectl/_k_kubectl/g' $FILE
