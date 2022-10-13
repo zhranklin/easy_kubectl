@@ -1,0 +1,5 @@
+++ FILE=/home/codespace/.easy_kubectl/compl_
+++ kubectl completion bash
+++ set -x
+bash: /home/codespace/.easy_kubectl/load_kube_complete.sh: line 27: syntax error near unexpected token `('
+bash: /home/codespace/.easy_kubectl/load_kube_complete.sh: line 27: `    LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)'

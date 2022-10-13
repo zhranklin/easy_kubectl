@@ -193,23 +193,47 @@ cat <<\EOF > load_kube_complete.sh
 FILE=~/.easy_kubectl/compl_${sh_name}
 kubectl completion ${sh_name:-bash} > $FILE
 
-LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
-sed -i ${LINE}'s/ \(--namespace\|-n\)//g' $FILE
+if [[ ${sh_name} == "bash" ]]; then
+  if ! type __start_kubectl 1>/dev/null 2>&1; then
+    source <(kubectl completion bash)
+  fi
+  if grep "bash completion V2 for kubectl" $FILE 1>/dev/null 2>&1; then
+    sed -i '/\s\b__start_kubectl\b\s/s/\bkubectl\b/k/g' $FILE
+    sed -i 's/_kubectl/_k_kubectl/g' $FILE
+    LINE=$(sed -n -e '/requestComp="${words\[0\]} /=' $FILE)
+    sed -i $LINE'iif [ -n "$KUBE_NS" ]; then prefix_flags="${prefix_flags} --namespace=${KUBE_NS}"; fi' $FILE
+    sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then prefix_flags="${prefix_flags} --context=${KUBE_CONTEXT}"; fi' $FILE
+    sed -i $LINE'iprefix_flags=' $FILE
+    sed -i '/requestComp=/s/${words\[0\]}/kubectl/g' $FILE
+    sed -i 's/__completeNoDesc/__completeNoDesc ${prefix_flags\[*\]} /g' $FILE
+  else
+    LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
+    sed -i ${LINE}'s/ \(--namespace\|-n\)//g' $FILE
 
-for i in $(sed -n -e '/complete.*__start_kubectl.*kubectl/=' $FILE); do
-  sed -i $i's/\bkubectl\b/k/g' $FILE
-done
+    for i in $(sed -n -e '/complete.*__start_kubectl.*kubectl/=' $FILE); do
+      sed -i $i's/\bkubectl\b/k/g' $FILE
+    done
 
-#查找__kubectl_override_flags()的行号
-LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)
-#查找__kubectl_override_flags()函数结尾
-LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
-#加入代码
-sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo -n "-n=$KUBE_NS "; fi' $FILE
-sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo -n "--context=$KUBE_CONTEXT "; fi' $FILE
+    #查找__kubectl_override_flags()的行号
+    LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)
+    #查找__kubectl_override_flags()函数结尾
+    LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
+    #加入代码
+    sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo -n "-n=$KUBE_NS "; fi' $FILE
+    sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo -n "--context=$KUBE_CONTEXT "; fi' $FILE
 
-sed -i 's/__custom_func/__k_custom_func/g' $FILE
-sed -i 's/_kubectl/_k_kubectl/g' $FILE
+    sed -i 's/__custom_func/__k_custom_func/g' $FILE
+    sed -i 's/_kubectl/_k_kubectl/g' $FILE
+  fi
+elif [[ ${sh_name} == "zsh" ]]; then
+  if ! type _kubectl 1>/dev/null 2>&1; then
+    source <(kubectl completion zsh)
+  fi
+  sed -i '/\s\b_kubectl\b\s/s/\bkubectl\b/k/g' $FILE
+  sed -i 's/_kubectl/_k_kubectl/g' $FILE
+  sed -i '/requestComp=/s/${words\[1\]}/kubectl/g' $FILE
+fi
+
 source $FILE
 
 EOF
@@ -221,4 +245,3 @@ else
   k '^default$'
   echo successfully installed easy_kubectl!
 fi
-
