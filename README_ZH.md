@@ -3,7 +3,7 @@ easy_kubectl旨在执行kubectl命令的时候解放我们的双手, 避免每�
 
 ## 安装
 ```bash
-tag=$(wget -qO - https://api.github.com/repos/zhranklin/easy_kubectl/releases/latest -s|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
+tag=$(wget -qO - https://api.github.com/repos/zhranklin/easy_kubectl/releases/latests|grep tag_name|sed 's/.*tag_name": "//g; s/",.*//g')
 source <(curl -fsSL https://github.com/zhranklin/easy_kubectl/archive/$tag.tar.gz | tar xzO easy_kubectl-$tag/install.sh)
 ```
 
