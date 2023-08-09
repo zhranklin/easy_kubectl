@@ -142,13 +142,19 @@ $(echo "$NSS"|sed '/^'$ns'$/d' )"
     fi
     echo -e "Current Namespace$UNCHANGED:\n$CONTEXT_STR$KUBE_NS"
   else
-    if [[ $KUBE_CONTEXT = "" ]]; then
-      echo kubectl -n $KUBE_NS $@ >&2
-      kubectl -n $KUBE_NS $@
-    else
-      echo kubectl -n $KUBE_NS --context=$KUBE_CONTEXT $@ >&2
-      kubectl -n $KUBE_NS --context=$KUBE_CONTEXT $@
+    CMD=kubectl
+    if [[ "$1" == "__complete" ]]; then
+      shift 1
+      CMD="$CMD __complete"
     fi
+    CMD="$CMD -n $KUBE_NS"
+    if [[ $KUBE_CONTEXT != "" ]]; then
+      CMD="$CMD --context=$KUBE_CONTEXT"
+    fi
+    printf "$CMD " >&2
+    for arg in "$@"; do printf %q "$arg" >&2; printf " " >&2; done
+    echo >&2
+    $( echo "$CMD" ) "$@"
   fi
 }
 
@@ -184,7 +190,6 @@ test -f "$VARIABLES_FN" && source $VARIABLES_FN
 
 COMPLETE_FN=$BASE_PATH/load_kube_complete.sh
 source $COMPLETE_FN
-source <(kubectl completion ${sh_name:-bash})
 
 EOF
 cat <<\EOF > load_kube_complete.sh
@@ -193,24 +198,39 @@ cat <<\EOF > load_kube_complete.sh
 FILE=~/.easy_kubectl/compl_${sh_name}
 kubectl completion ${sh_name:-bash} > $FILE
 
-LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
-sed -i ${LINE}'s/ \(--namespace\|-n\)//g' $FILE
+if cat "$FILE" | grep -q __kubectl_override_flag_list; then
+  LINE=$(sed -n -e '/__kubectl_override_flag_list=/=' $FILE)
+  sed -i ${LINE}'s/ \(--namespace\|-n\)//g' $FILE
 
-for i in $(sed -n -e '/complete.*__start_kubectl.*kubectl/=' $FILE); do
-  sed -i $i's/\bkubectl\b/k/g' $FILE
-done
+  for i in $(sed -n -e '/complete.*__start_kubectl.*kubectl/=' $FILE); do
+    sed -i $i's/\bkubectl\b/k/g' $FILE
+  done
 
-#查找__kubectl_override_flags()的行号
-LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)
-#查找__kubectl_override_flags()函数结尾
-LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
-#加入代码
-sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo -n "-n=$KUBE_NS "; fi' $FILE
-sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo -n "--context=$KUBE_CONTEXT "; fi' $FILE
+  #查找__kubectl_override_flags()的行号
+  LINE=$(sed -n -e '/__kubectl_override_flags()/=' $FILE)
+  #查找__kubectl_override_flags()函数结尾
+  LINE=$(sed -n -e '1,'$LINE'd;/^\s*\}\s*$/=' $FILE | head -1)
+  #加入代码
+  sed -i $LINE'iif [ -n "$KUBE_NS" ]; then echo -n "-n=$KUBE_NS "; fi' $FILE
+  sed -i $LINE'iif [ -n "$KUBE_CONTEXT" ]; then echo -n "--context=$KUBE_CONTEXT "; fi' $FILE
 
-sed -i 's/__custom_func/__k_custom_func/g' $FILE
-sed -i 's/_kubectl/_k_kubectl/g' $FILE
-source $FILE
+  sed -i 's/__custom_func/__k_custom_func/g' $FILE
+  sed -i 's/_kubectl/_k_kubectl/g' $FILE
+  source $FILE
+  source <(kubectl completion ${sh_name:-bash})
+else
+  source <(kubectl completion ${sh_name:-bash})
+  if [[ $sh_name == zsh ]]; then
+    compdef _kubectl k
+  fi
+  if [[ $sh_name == bash ]]; then
+    if [[ $(type -t compopt) = "builtin" ]]; then
+      complete -o default -F __start_kubectl k
+    else
+      complete -o default -o nospace -F __start_kubectl k
+    fi
+  fi
+fi
 
 EOF
 }
