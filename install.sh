@@ -78,7 +78,7 @@ function isapply() {
 
 function __k_add_history() {
   HISTORY=$HOME/.easy_kubectl/.history
-  sed -i '/^'$1'$/d' $HISTORY
+  sed -i.bak '/^'$1'$/d' $HISTORY && rm -f $HISTORY.bak
   echo $1 >> $HISTORY
 }
 
